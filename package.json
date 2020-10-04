@@ -8,8 +8,12 @@
     "react-scripts": "0.8.5"
   },
   "dependencies": {
+    "leaflet": "^1.7.1",
     "react": "^16.1.1",
-    "react-dom": "^16.1.1"
+    "react-dom": "^16.1.1",
+    "react-id-generator": "^3.0.1",
+    "react-leaflet": "^2.7.0",
+    "react-leaflet-easyprint": "^2.0.0"
   },
   "homepage": "./",
   "main": "src/electron-starter.js",
