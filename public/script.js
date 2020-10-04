@@ -8,12 +8,12 @@ gsap.from('#header-container', {
 	delay: 1,
 });
 
-// gsap.from('p', {
-// 	duration: 1.5,
-// 	x: '-100vw',
-//   ease: 'power2.in',
-//   delay: 2
-// });
+gsap.from('#findMe', {
+	duration: 1.5,
+	x: '-100vw',
+	ease: 'power2.in',
+	delay: 2,
+});
 
 gsap.fromTo(
 	'.leaflet-container',

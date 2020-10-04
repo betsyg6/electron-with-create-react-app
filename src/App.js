@@ -1,27 +1,13 @@
 /** @format */
 
-// import Mapper from './Map';
-// import LocateControl from './Locate';
-import React, { useRef } from 'react';
+import React from 'react';
 import { Map, Marker, Popup, TileLayer, withLeaflet } from 'react-leaflet';
-
-import L from 'leaflet';
-
+import { renderToStaticMarkup } from 'react-dom/server';
+import { divIcon } from 'leaflet';
 import Header from './Header';
 import nextId from 'react-id-generator';
 import PrintControlDefault from 'react-leaflet-easyprint';
 const PrintControl = withLeaflet(PrintControlDefault);
-
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-
-//import icon from leaflet, create new icon instances--give user option to use different icons
-
-// const bar = new L.Icon({
-// 	iconUrl: 'wineIcon.png',
-// 	iconSize: [20, 20],
-// 	className: 'myDivIcon',
-// });
 
 class App extends React.Component {
 	constructor(props) {
@@ -33,10 +19,27 @@ class App extends React.Component {
 			title: '',
 			imageUrl: '',
 			location: [],
+			showMenu: false,
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.findMe = this.findMe.bind(this);
+		// this.menuToggle = this.menuToggle.bind(this);
+	}
+
+	// menuToggle() {
+	// 	this.setState({ showMenu: !this.state.showMenu });
+	// }
+
+	findMe() {
+		navigator.geolocation.getCurrentPosition((position) => {
+			console.log(position);
+			this.setState({
+				lat: position.coords.latitude,
+				lng: position.coords.longitude,
+			});
+		});
 	}
 
 	handleClick(event) {
@@ -73,23 +76,31 @@ class App extends React.Component {
 	}
 
 	render() {
+		// const iconMarkup = renderToStaticMarkup(
+
+		// 	// <i id="bar" className="fa fa-glass-martini fa-2x" />
+		// 	// <i id="home" className="fa fa-home fa-2x" />
+		// 	<i id="hearts" className="fa fa-grin-hearts fa-2x" />
+		// );
+		// const customMarkerIcon = divIcon({
+		// 	html: renderToStaticMarkup(
+		// 		<i id="heart" className="fa fa-heart fa-2x" />
+		// 	),
+		// });
+
 		return (
 			<div id="app-container">
 				<Header />
 
-				{/* list of icons */}
+				<button id="findMe" onClick={this.findMe}>
+					Find me!
+				</button>
 
-				{/* <Mapper
-					handleSubmit={this.handleSubmit}
-					handleChange={this.handleChange}
-					handleClick={this.handleClick}
-					lat={this.state.lat}
-					lng={this.state.lng}
-					title={this.state.title}
-					imageUrl={this.state.imageUrl}
-					description={this.state.description}
-					location={this.state.location}
-				/> */}
+				{/* <div className={this.state.showMenu ? 'showMenu' : 'hideMenu'}>
+					<p>icon options!</p>
+				</div>
+				<button type="button" onClick={this.menuToggle}>*</button> */}
+
 				<Map
 					center={[this.state.lat, this.state.lng]}
 					zoom={13}
@@ -102,7 +113,11 @@ class App extends React.Component {
 
 					{this.state.description.length > 0 &&
 						this.state.description.map((obj) => (
-							<Marker key={`marker-${obj.id}`} position={obj.position}>
+							<Marker
+								key={`marker-${obj.id}`}
+								position={obj.position}
+								// icon={customMarkerIcon}
+							>
 								<Popup>
 									{obj.title ? (
 										<div>
@@ -130,7 +145,6 @@ class App extends React.Component {
 									<button
 										type="button"
 										onClick={() => {
-											console.log(obj.id);
 											const filtered = this.state.description.filter(
 												(object) => {
 													return object.id !== obj.id;
@@ -160,8 +174,5 @@ class App extends React.Component {
 
 export default App;
 
-//geolocation?
-//access camera for pics?
 //view all popups?
 //icons
-//last thing is to send the whole app to electron to host :)
