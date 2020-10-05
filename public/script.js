@@ -24,3 +24,10 @@ gsap.fromTo(
 	},
 	{ duration: 1, opacity: 1, scale: 1, rotation: 0 }
 );
+
+gsap.from('select', {
+	duration: 1.5,
+	x: '100vw',
+	ease: 'power2.in',
+	delay: 2,
+});

@@ -9,6 +9,20 @@ import nextId from 'react-id-generator';
 import PrintControlDefault from 'react-leaflet-easyprint';
 const PrintControl = withLeaflet(PrintControlDefault);
 
+// export const food = new L.Icon({
+// 	iconUrl: './restaurant-outline.svg',
+// 	iconSize: [25, 55],
+// });
+
+// export const heart = divIcon({
+// 	html: renderToStaticMarkup(<i id="heart" className="fa fa-heart fa-2x" />),
+// });
+// export const bar = divIcon({
+// 	html: renderToStaticMarkup(
+// 		<i id="bar" className="fa fa-glass-martini fa-2x" />
+// 	),
+// });
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -20,6 +34,7 @@ class App extends React.Component {
 			imageUrl: '',
 			location: [],
 			showMenu: false,
+			icon: 'heart',
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,9 +47,8 @@ class App extends React.Component {
 	// 	this.setState({ showMenu: !this.state.showMenu });
 	// }
 
-	findMe() {
+  findMe() {
 		navigator.geolocation.getCurrentPosition((position) => {
-			console.log(position);
 			this.setState({
 				lat: position.coords.latitude,
 				lng: position.coords.longitude,
@@ -51,6 +65,7 @@ class App extends React.Component {
 		obj.lng = long;
 		obj.position = [latt, long];
 		obj.id = nextId();
+
 		let description = this.state.description;
 		description.push(obj);
 		this.setState({ ...description, lat: coords.lat, lng: coords.lng });
@@ -67,26 +82,29 @@ class App extends React.Component {
 		let obj = this.state.description.filter((obj) => {
 			return obj.lat === this.state.lat && obj.lng === this.state.lng;
 		});
+		let icon = this.state.icon;
 		let titleText = this.state.title;
 		let image = this.state.imageUrl;
 		obj[0].title = titleText;
 		obj[0].imageUrl = image;
+		obj[0].icon = icon;
 		let description = this.state.description;
 		this.setState({ description });
 	}
 
 	render() {
-		// const iconMarkup = renderToStaticMarkup(
-
-		// 	// <i id="bar" className="fa fa-glass-martini fa-2x" />
 		// 	// <i id="home" className="fa fa-home fa-2x" />
-		// 	<i id="hearts" className="fa fa-grin-hearts fa-2x" />
-		// );
-		// const customMarkerIcon = divIcon({
-		// 	html: renderToStaticMarkup(
-		// 		<i id="heart" className="fa fa-heart fa-2x" />
-		// 	),
-		// });
+
+		const heart = divIcon({
+			html: renderToStaticMarkup(
+				<i id="heart" className="fa fa-heart fa-2x" />
+			),
+		});
+		const bar = divIcon({
+			html: renderToStaticMarkup(
+				<i id="bar" className="fa fa-glass-martini fa-2x" />
+			),
+		});
 
 		return (
 			<div id="app-container">
@@ -116,7 +134,7 @@ class App extends React.Component {
 							<Marker
 								key={`marker-${obj.id}`}
 								position={obj.position}
-								// icon={customMarkerIcon}
+								icon={obj.icon === 'Favorite Bars' ? bar : heart}
 							>
 								<Popup>
 									{obj.title ? (
@@ -138,6 +156,14 @@ class App extends React.Component {
 												placeholder="imageUrl"
 												onChange={this.handleChange}
 											/>
+											<select
+												name="icon"
+												value={this.state.icon}
+												onChange={this.handleChange}
+											>
+												<option>Places I Love</option>
+												<option>Favorite Bars</option>
+											</select>
 											<button type="submit">Submit</button>
 										</form>
 									)}
